@@ -1,0 +1,227 @@
+openapi: 3.0.0
+info:
+  title: Shop Inventory and Billing API
+  description: API for managing inventory and sales transactions for a small shop.
+  version: 1.0.0
+paths:
+  /inventories:
+    get:
+      summary: Retrieve all inventory items
+      tags:
+        - Inventory
+      responses:
+        "200":
+          description: A list of all inventory items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InventoryItem"
+        "500":
+          description: Internal server error
+
+    post:
+      summary: Add a new item to the inventory
+      tags:
+        - Inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryItem"
+      responses:
+        "201":
+          description: Item successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItem"
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+
+  /inventories/{id}:
+    get:
+      summary: Retrieve a specific inventory item by ID
+      tags:
+        - Inventory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Details of the inventory item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItem"
+        "404":
+          description: Item not found
+        "500":
+          description: Internal server error
+
+    put:
+      summary: Update an inventory item
+      tags:
+        - Inventory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryItem"
+      responses:
+        "200":
+          description: Item successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryItem"
+        "400":
+          description: Bad request
+        "404":
+          description: Item not found
+        "500":
+          description: Internal server error
+
+    delete:
+      summary: Delete an inventory item
+      tags:
+        - Inventory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Item successfully deleted
+        "404":
+          description: Item not found
+        "500":
+          description: Internal server error
+
+  /bills:
+    get:
+      summary: Retrieve all bills
+      tags:
+        - Bill
+      responses:
+        "200":
+          description: A list of all bills
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Bill"
+        "500":
+          description: Internal server error
+
+    post:
+      summary: Create a new bill
+      tags:
+        - Bill
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BillRequest"
+      responses:
+        "201":
+          description: Bill successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bill"
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+
+  /bills/{id}:
+    get:
+      summary: Retrieve a specific bill by ID
+      tags:
+        - Bill
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Details of the bill
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bill"
+        "404":
+          description: Bill not found
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    InventoryItem:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Widget"
+        quantity:
+          type: integer
+          example: 100
+        price:
+          type: number
+          format: float
+          example: 19.99
+
+    BillRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              itemId:
+                type: string
+                example: "605c72ef16b3c8c1f1f2b1f2"
+              quantity:
+                type: integer
+                example: 2
+
+    Bill:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              itemId:
+                type: string
+                example: "605c72ef16b3c8c1f1f2b1f2"
+              quantity:
+                type: integer
+                example: 2
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-08-12T12:00:00Z"
