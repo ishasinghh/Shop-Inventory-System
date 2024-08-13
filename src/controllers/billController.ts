@@ -38,6 +38,3 @@ export class BillController {
     }
   }
 }
-
-const billController = new BillController();
-export default billController;

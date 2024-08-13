@@ -34,6 +34,3 @@ export class BillService {
     return await Bill.findById(id).populate("items.itemId");
   }
 }
-
-const billService = new BillService();
-export default billService;
